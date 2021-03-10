@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gPlIQutvN0/Tlnoc7+lqDdHFd1DTwKbyKlqmfQU0N52zUZzxGHsu0kFRkfFeVfOZtZSAWC50Vo/2QasXVQzvew==",
+  "dgSpecHash": "AWY2I94SzNbFuGQjSqndUeaB1xU16Sdz2ZWx5oor28nvaorRjavDtn4CNANUftwgL2cXt8y6QdHKy5/eWxP4gQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
+  "projectFilePath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\cameron.boutilier\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\cameron.boutilier\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

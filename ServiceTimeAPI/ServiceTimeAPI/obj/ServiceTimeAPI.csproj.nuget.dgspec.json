@@ -1,23 +1,22 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {}
+    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {
+    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
+        "projectUniqueName": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
         "projectName": "ServiceTimeAPI",
-        "projectPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
+        "projectPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
         "packagesPath": "C:\\Users\\cameron.boutilier\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\obj\\",
+        "outputPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\AccountingAPI\\ServiceTimeAPI\\ServiceTimeAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\cameron.boutilier\\Documents\\Projects\\NuGet.Config",
           "C:\\Users\\cameron.boutilier\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,8 +25,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://www.myget.org/F/blazorise/api/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net5.0": {
