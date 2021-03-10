@@ -1,0 +1,8 @@
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\bin\Debug\ReadExcel.exe.config
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\bin\Debug\ReadExcel.exe
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\bin\Debug\ReadExcel.pdb
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\obj\Debug\ReadExcel.csprojAssemblyReference.cache
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\obj\Debug\ReadExcel.csproj.ResolveComReference.cache
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\obj\Debug\ReadExcel.csproj.CoreCompileInputs.cache
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\obj\Debug\ReadExcel.exe
+C:\Users\tim.su.ES\Desktop\ReadExcel\ReadExcel\obj\Debug\ReadExcel.pdb
