@@ -1,0 +1,76 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
+        "projectName": "ServiceTimeAPI",
+        "projectPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\ServiceTimeAPI.csproj",
+        "packagesPath": "C:\\Users\\cameron.boutilier\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\cameron.boutilier\\Documents\\Projects\\ServiceTimeAPI\\ServiceTimeAPI\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\cameron.boutilier\\Documents\\Projects\\NuGet.Config",
+          "C:\\Users\\cameron.boutilier\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {},
+          "https://www.myget.org/F/blazorise/api/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.6.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
