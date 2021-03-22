@@ -19,7 +19,6 @@ namespace ServiceTimeAPI.Controllers
     {
         protected IHttpClientFactory HttpClientFactory { get; }
 
-
         public ServiceTimeController(IHttpClientFactory httpClientFactory)
         {
             HttpClientFactory = httpClientFactory;
@@ -149,8 +148,7 @@ namespace ServiceTimeAPI.Controllers
 
     public class ServiceTimeTally
     {
-        public int ProChartConvos { get; set; }
-        public int ProChartServiceTime { get; set; }
+        public ProChartServiceTimeDTO ProchatServiceTime { get; set; }
         public int NetFlowConvos { get; set; }
         public int NetFlowServiceTime { get; set; }
         public int ProTrendConvos { get; set; }
@@ -158,6 +156,25 @@ namespace ServiceTimeAPI.Controllers
         public int ProMonitorConvos { get; set; }
         public int ProMonitorServiceTime { get; set; }
     }
+
+    public class ProChartServiceTimeDTO
+    {
+        public int ProChartConvos { get; set; }
+        public int ProChartServiceTime { get; set; }
+
+        public int BillableConvos { get; set; }
+        public int BillableServiceTime { get; set; }
+        //public Dictionary<string, int> BillableTagServiceTime { get; set; }
+
+        public int NonBillableConvos { get; set; }
+        public int NonBillableServiceTime { get; set; }
+        //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
+
+        public int UnknownBillableConvos { get; set; }
+        public int UnknownBillableServiceTime { get; set; }
+        //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
+    }
+
 
     public class ExportRequest
     {
