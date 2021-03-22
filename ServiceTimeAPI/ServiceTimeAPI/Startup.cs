@@ -33,7 +33,7 @@ namespace ServiceTimeAPI
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ServiceTimeAPI", Version = "v1" });
             });
-
+        
             services.AddHttpClient("frontappexport", c =>
             {
                 c.BaseAddress = new Uri("https://api2.frontapp.com/");

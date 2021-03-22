@@ -49,7 +49,7 @@ namespace ServiceTimeAPI.Controllers
             };
             string content = JsonSerializer.Serialize(req);
 
-            using (var httpClient = HttpClientFactory.CreateClient("frontappexport"))
+            using (HttpClient httpClient = HttpClientFactory.CreateClient("frontappexport"))
             {
                 StringContent reqJson = new StringContent(
                         JsonSerializer.Serialize(req),
@@ -73,14 +73,13 @@ namespace ServiceTimeAPI.Controllers
                         break;
                 }
 
-                using (var request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
                 {
                     using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\FileDownload\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
                     {
                         await contentStream.CopyToAsync(stream);
                     }
                 }
-
                 tally = ProcessCSV(@"C:\FileDownload\Export.csv");
             }
             return Ok(tally);
