@@ -62,7 +62,7 @@ namespace ServiceTimeAPI.Controllers
 
                 while (true)
                 {
-                    System.Threading.Thread.Sleep(10000);
+                    System.Threading.Thread.Sleep(200);
 
                     res = await httpClient.GetAsync($"exports/{resObj.id}");
                     res.EnsureSuccessStatusCode();
@@ -74,16 +74,121 @@ namespace ServiceTimeAPI.Controllers
 
                 using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
                 {
-                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\FileDownload\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
+                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\Users\tim.su.ES\Desktop\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
                     {
                         await contentStream.CopyToAsync(stream);
                     }
                 }
-                tally = ProcessCSV(@"C:\FileDownload\Export.csv");
+                tally = ProcessCSV(@"C:\Users\tim.su.ES\Desktop\Export.csv");
             }
             return Ok(tally);
         }
+        private ServiceTimeTally TallyResult(List<string> tags, int i, ServiceTimeTally tally) {
 
+            dynamic serviceTimeDTO = tally.ProchartServiceTimeDTO;
+            if (tags.Contains("ProChart"))
+            {
+                 serviceTimeDTO = tally.ProchartServiceTimeDTO;
+                 serviceTimeDTO.Convos++;
+
+                if (tags.Contains("Non-Billable"))
+                {
+                    serviceTimeDTO.NonBillableConvos++;
+                    serviceTimeDTO.NonBillableServiceTime += i;
+                }
+                else if (tags.Contains("Billable"))
+                {
+                    serviceTimeDTO.BillableConvos++;
+                    serviceTimeDTO.BillableServiceTime += i;
+                }
+                else
+                {
+                    serviceTimeDTO.UnknownBillableConvos++;
+                    serviceTimeDTO.UnknownBillableServiceTime += i;
+                }
+                serviceTimeDTO.ServiceTime =
+                    serviceTimeDTO.NonBillableServiceTime
+                    + serviceTimeDTO.BillableServiceTime
+                    + serviceTimeDTO.UnknownBillableServiceTime;
+            }
+            else if (tags.Contains("NetFlow"))
+            {
+                serviceTimeDTO = tally.NetflowServiceTimeDTO;
+                serviceTimeDTO.Convos++;
+
+                if (tags.Contains("Non-Billable"))
+                {
+                    serviceTimeDTO.NonBillableConvos++;
+                    serviceTimeDTO.NonBillableServiceTime += i;
+                }
+                else if (tags.Contains("Billable"))
+                {
+                    serviceTimeDTO.BillableConvos++;
+                    serviceTimeDTO.BillableServiceTime += i;
+                }
+                else
+                {
+                    serviceTimeDTO.UnknownBillableConvos++;
+                    serviceTimeDTO.UnknownBillableServiceTime += i;
+                }
+                serviceTimeDTO.ServiceTime =
+                    serviceTimeDTO.NonBillableServiceTime
+                    + serviceTimeDTO.BillableServiceTime
+                    + serviceTimeDTO.UnknownBillableServiceTime;
+            }
+            else if (tags.Contains("ProTrend"))
+            {
+                serviceTimeDTO = tally.ProtrendServiceTimeDTO;
+                serviceTimeDTO.Convos++;
+
+                if (tags.Contains("Non-Billable"))
+                {
+                    serviceTimeDTO.NonBillableConvos++;
+                    serviceTimeDTO.NonBillableServiceTime += i;
+                }
+                else if (tags.Contains("Billable"))
+                {
+                    serviceTimeDTO.BillableConvos++;
+                    serviceTimeDTO.BillableServiceTime += i;
+                }
+                else
+                {
+                    serviceTimeDTO.UnknownBillableConvos++;
+                    serviceTimeDTO.UnknownBillableServiceTime += i;
+                }
+                serviceTimeDTO.ServiceTime =
+                    serviceTimeDTO.NonBillableServiceTime
+                    + serviceTimeDTO.BillableServiceTime
+                    + serviceTimeDTO.UnknownBillableServiceTime;
+            }
+            else if (tags.Contains("ProMonitor"))
+            {
+                serviceTimeDTO = tally.PromonitorServiceTimeDTO;
+                serviceTimeDTO.Convos++;
+
+                if (tags.Contains("Non-Billable"))
+                {
+                    serviceTimeDTO.NonBillableConvos++;
+                    serviceTimeDTO.NonBillableServiceTime += i;
+                }
+                else if (tags.Contains("Billable"))
+                {
+                    serviceTimeDTO.BillableConvos++;
+                    serviceTimeDTO.BillableServiceTime += i;
+                }
+                else
+                {
+                    serviceTimeDTO.UnknownBillableConvos++;
+                    serviceTimeDTO.UnknownBillableServiceTime += i;
+                }
+                serviceTimeDTO.ServiceTime =
+                    serviceTimeDTO.NonBillableServiceTime
+                    + serviceTimeDTO.BillableServiceTime
+                    + serviceTimeDTO.UnknownBillableServiceTime;
+            }
+            
+            return tally;
+        }
         private Hashtable ParseCSV(string filename)
         {
             Hashtable res = new Hashtable();
@@ -107,38 +212,20 @@ namespace ServiceTimeAPI.Controllers
 
         private ServiceTimeTally ProcessCSV(string fileName)
         {
-            ServiceTimeTally tally = new ServiceTimeTally();
             Hashtable ht = ParseCSV(fileName);
-
+            ServiceTimeTally tally = new ServiceTimeTally();
+            tally.ProchartServiceTimeDTO = new ProChartServiceTimeDTO { Convos = 0, ServiceTime = 0 };
+            tally.NetflowServiceTimeDTO = new NetFlowServiceTimeDTO { Convos = 0, ServiceTime = 0 };
+            tally.ProtrendServiceTimeDTO = new ProTrendServiceTimeDTO { Convos = 0, ServiceTime = 0 };
+            tally.PromonitorServiceTimeDTO = new ProMonitorServiceTimeDTO { Convos = 0, ServiceTime = 0 };
             foreach (string key in ht.Keys)
             {
                 List<string> tags = ht[key].ToString().Split(',').ToList();
                 int i = 0;
-
                 foreach (string tag in tags)
                     if (tag.Contains("Minutes"))
                         i = int.Parse(tag.Split(" ")[0]);
-
-                if (tags.Contains("ProChart"))
-                {
-                    tally.ProChartConvos++;
-                    tally.ProChartServiceTime += i;
-                }
-                else if (tags.Contains("NetFlow"))
-                {
-                    tally.NetFlowConvos++;
-                    tally.NetFlowServiceTime += i;
-                }
-                else if (tags.Contains("ProTrend"))
-                {
-                    tally.ProTrendConvos++;
-                    tally.ProTrendServiceTime += i;
-                }
-                else if (tags.Contains("ProMonitor"))
-                {
-                    tally.ProMonitorConvos++;
-                    tally.ProMonitorServiceTime += i;
-                }
+                TallyResult(tags, i, tally);
             }
 
             return tally;
@@ -148,34 +235,80 @@ namespace ServiceTimeAPI.Controllers
 
     public class ServiceTimeTally
     {
-        public ProChartServiceTimeDTO ProchatServiceTime { get; set; }
-        public int NetFlowConvos { get; set; }
-        public int NetFlowServiceTime { get; set; }
-        public int ProTrendConvos { get; set; }
-        public int ProTrendServiceTime { get; set; }
-        public int ProMonitorConvos { get; set; }
-        public int ProMonitorServiceTime { get; set; }
+        public ProChartServiceTimeDTO ProchartServiceTimeDTO { get; set; }
+        public NetFlowServiceTimeDTO NetflowServiceTimeDTO { get; set; }
+        public ProTrendServiceTimeDTO ProtrendServiceTimeDTO { get; set; }
+        public ProMonitorServiceTimeDTO PromonitorServiceTimeDTO { get; set; }
     }
 
     public class ProChartServiceTimeDTO
     {
-        public int ProChartConvos { get; set; }
-        public int ProChartServiceTime { get; set; }
+        public int Convos { get; set; } = 0;
+        public int ServiceTime { get; set; } = 0;
 
-        public int BillableConvos { get; set; }
-        public int BillableServiceTime { get; set; }
+        public int BillableConvos { get; set; } = 0;
+        public int BillableServiceTime { get; set; } = 0;
         //public Dictionary<string, int> BillableTagServiceTime { get; set; }
 
-        public int NonBillableConvos { get; set; }
-        public int NonBillableServiceTime { get; set; }
+        public int NonBillableConvos { get; set; } = 0;
+        public int NonBillableServiceTime { get; set; } = 0;
         //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
 
-        public int UnknownBillableConvos { get; set; }
-        public int UnknownBillableServiceTime { get; set; }
+        public int UnknownBillableConvos { get; set; } = 0;
+        public int UnknownBillableServiceTime { get; set; } = 0;
         //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
     }
+    public class NetFlowServiceTimeDTO
+    {
+        public int Convos { get; set; } = 0;
+        public int ServiceTime { get; set; } = 0;
 
+        public int BillableConvos { get; set; } = 0;
+        public int BillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> BillableTagServiceTime { get; set; }
 
+        public int NonBillableConvos { get; set; } = 0;
+        public int NonBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
+
+        public int UnknownBillableConvos { get; set; } = 0;
+        public int UnknownBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
+    }
+    public class ProTrendServiceTimeDTO
+    {
+        public int Convos { get; set; } = 0;
+        public int ServiceTime { get; set; } = 0;
+
+        public int BillableConvos { get; set; } = 0;
+        public int BillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> BillableTagServiceTime { get; set; }
+
+        public int NonBillableConvos { get; set; } = 0;
+        public int NonBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
+
+        public int UnknownBillableConvos { get; set; } = 0;
+        public int UnknownBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
+    }
+    public class ProMonitorServiceTimeDTO
+    {
+        public int Convos { get; set; } = 0;
+        public int ServiceTime { get; set; } = 0;
+
+        public int BillableConvos { get; set; } = 0;
+        public int BillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> BillableTagServiceTime { get; set; }
+
+        public int NonBillableConvos { get; set; } = 0;
+        public int NonBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
+
+        public int UnknownBillableConvos { get; set; } = 0;
+        public int UnknownBillableServiceTime { get; set; } = 0;
+        //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
+    }
     public class ExportRequest
     {
         public string inbox_id { get; set; }
