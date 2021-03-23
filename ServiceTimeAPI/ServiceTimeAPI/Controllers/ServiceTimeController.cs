@@ -83,110 +83,51 @@ namespace ServiceTimeAPI.Controllers
             }
             return Ok(tally);
         }
+        protected dynamic Bill(List<string> tags, int i, dynamic serviceTimeDTO) {
+            serviceTimeDTO.Convos++;
+            if (tags.Contains("Non-Billable"))
+            {
+                serviceTimeDTO.NonBillableConvos++;
+                serviceTimeDTO.NonBillableServiceTime += i;
+            }
+            else if (tags.Contains("Billable"))
+            {
+                serviceTimeDTO.BillableConvos++;
+                serviceTimeDTO.BillableServiceTime += i;
+            }
+            else
+            {
+                serviceTimeDTO.UnknownBillableConvos++;
+                serviceTimeDTO.UnknownBillableServiceTime += i;
+            }
+            serviceTimeDTO.ServiceTime =
+                serviceTimeDTO.NonBillableServiceTime
+                + serviceTimeDTO.BillableServiceTime
+                + serviceTimeDTO.UnknownBillableServiceTime;
+            return serviceTimeDTO;
+        }
         private ServiceTimeTally TallyResult(List<string> tags, int i, ServiceTimeTally tally) {
-
             dynamic serviceTimeDTO = tally.ProchartServiceTimeDTO;
             if (tags.Contains("ProChart"))
             {
-                 serviceTimeDTO = tally.ProchartServiceTimeDTO;
-                 serviceTimeDTO.Convos++;
-
-                if (tags.Contains("Non-Billable"))
-                {
-                    serviceTimeDTO.NonBillableConvos++;
-                    serviceTimeDTO.NonBillableServiceTime += i;
-                }
-                else if (tags.Contains("Billable"))
-                {
-                    serviceTimeDTO.BillableConvos++;
-                    serviceTimeDTO.BillableServiceTime += i;
-                }
-                else
-                {
-                    serviceTimeDTO.UnknownBillableConvos++;
-                    serviceTimeDTO.UnknownBillableServiceTime += i;
-                }
-                serviceTimeDTO.ServiceTime =
-                    serviceTimeDTO.NonBillableServiceTime
-                    + serviceTimeDTO.BillableServiceTime
-                    + serviceTimeDTO.UnknownBillableServiceTime;
+                serviceTimeDTO = tally.ProchartServiceTimeDTO;
+                Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("NetFlow"))
             {
                 serviceTimeDTO = tally.NetflowServiceTimeDTO;
-                serviceTimeDTO.Convos++;
-
-                if (tags.Contains("Non-Billable"))
-                {
-                    serviceTimeDTO.NonBillableConvos++;
-                    serviceTimeDTO.NonBillableServiceTime += i;
-                }
-                else if (tags.Contains("Billable"))
-                {
-                    serviceTimeDTO.BillableConvos++;
-                    serviceTimeDTO.BillableServiceTime += i;
-                }
-                else
-                {
-                    serviceTimeDTO.UnknownBillableConvos++;
-                    serviceTimeDTO.UnknownBillableServiceTime += i;
-                }
-                serviceTimeDTO.ServiceTime =
-                    serviceTimeDTO.NonBillableServiceTime
-                    + serviceTimeDTO.BillableServiceTime
-                    + serviceTimeDTO.UnknownBillableServiceTime;
+                Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("ProTrend"))
             {
                 serviceTimeDTO = tally.ProtrendServiceTimeDTO;
-                serviceTimeDTO.Convos++;
-
-                if (tags.Contains("Non-Billable"))
-                {
-                    serviceTimeDTO.NonBillableConvos++;
-                    serviceTimeDTO.NonBillableServiceTime += i;
-                }
-                else if (tags.Contains("Billable"))
-                {
-                    serviceTimeDTO.BillableConvos++;
-                    serviceTimeDTO.BillableServiceTime += i;
-                }
-                else
-                {
-                    serviceTimeDTO.UnknownBillableConvos++;
-                    serviceTimeDTO.UnknownBillableServiceTime += i;
-                }
-                serviceTimeDTO.ServiceTime =
-                    serviceTimeDTO.NonBillableServiceTime
-                    + serviceTimeDTO.BillableServiceTime
-                    + serviceTimeDTO.UnknownBillableServiceTime;
+                Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("ProMonitor"))
             {
                 serviceTimeDTO = tally.PromonitorServiceTimeDTO;
-                serviceTimeDTO.Convos++;
-
-                if (tags.Contains("Non-Billable"))
-                {
-                    serviceTimeDTO.NonBillableConvos++;
-                    serviceTimeDTO.NonBillableServiceTime += i;
-                }
-                else if (tags.Contains("Billable"))
-                {
-                    serviceTimeDTO.BillableConvos++;
-                    serviceTimeDTO.BillableServiceTime += i;
-                }
-                else
-                {
-                    serviceTimeDTO.UnknownBillableConvos++;
-                    serviceTimeDTO.UnknownBillableServiceTime += i;
-                }
-                serviceTimeDTO.ServiceTime =
-                    serviceTimeDTO.NonBillableServiceTime
-                    + serviceTimeDTO.BillableServiceTime
-                    + serviceTimeDTO.UnknownBillableServiceTime;
+                Bill(tags, i, serviceTimeDTO);
             }
-            
             return tally;
         }
         private Hashtable ParseCSV(string filename)
