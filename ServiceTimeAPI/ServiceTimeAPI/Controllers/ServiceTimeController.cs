@@ -60,28 +60,176 @@ namespace ServiceTimeAPI.Controllers
                 content = await res.Content.ReadAsStringAsync();
                 ExportResponse resObj = JsonSerializer.Deserialize<ExportResponse>(content);
 
-                while (true)
-                {
-                    System.Threading.Thread.Sleep(200);
+                //while (true)
+                //{
+                //    System.Threading.Thread.Sleep(200);
 
-                    res = await httpClient.GetAsync($"exports/{resObj.id}");
-                    res.EnsureSuccessStatusCode();
-                    content = await res.Content.ReadAsStringAsync();
-                    resObj = JsonSerializer.Deserialize<ExportResponse>(content);
-                    if (resObj.url != null)
-                        break;
-                }
+                //    res = await httpClient.GetAsync($"exports/{resObj.id}");
+                //    res.EnsureSuccessStatusCode();
+                //    content = await res.Content.ReadAsStringAsync();
+                //    resObj = JsonSerializer.Deserialize<ExportResponse>(content);
+                //    if (resObj.url != null)
+                //        break;
+                //}
 
-                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
-                {
-                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\Users\tim.su.ES\Desktop\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
-                    {
-                        await contentStream.CopyToAsync(stream);
-                    }
-                }
+                //using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
+                //{
+                //    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\Users\tim.su.ES\Desktop\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
+                //    {
+                //        await contentStream.CopyToAsync(stream);
+                //    }
+                //}
                 tally = ProcessCSV(@"C:\Users\tim.su.ES\Desktop\Export.csv");
             }
             return Ok(tally);
+        }
+        protected dynamic AAT(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Acquisition / Asset Transfer"))
+            {
+                serviceTimeDTO.AATConvos++;
+                serviceTimeDTO.AATServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic Allocations(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Allocations"))
+            {
+                serviceTimeDTO.AllocationsConvos++;
+                serviceTimeDTO.AllocationsServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic Batch(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Batch"))
+            {
+                serviceTimeDTO.BatchConvos++;
+                serviceTimeDTO.BatchServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic ChartProcess(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Chart Processing"))
+            {
+                serviceTimeDTO.ChartProcessConvos++;
+                serviceTimeDTO.ChartProcessServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic DevReq(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Development Request"))
+            {
+                serviceTimeDTO.DevReqConvos++;
+                serviceTimeDTO.DevReqServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic FTP(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("FTP"))
+            {
+                serviceTimeDTO.FTPConvos++;
+                serviceTimeDTO.FTPServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic GasAna(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Gas Analysis"))
+            {
+                serviceTimeDTO.GasAnaConvos++;
+                serviceTimeDTO.GasAnaServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic LabelRequest(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Label Request"))
+            {
+                serviceTimeDTO.LabelRequestConvos++;
+                serviceTimeDTO.LabelRequestServiceTime += i;
+            }
+            serviceTimeDTO.ServiceTime =
+                serviceTimeDTO.NonBillableServiceTime
+                + serviceTimeDTO.BillableServiceTime
+                + serviceTimeDTO.UnknownBillableServiceTime;
+            return serviceTimeDTO;
+        }
+        protected dynamic Meter(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Meter"))
+            {
+                serviceTimeDTO.MeterConvos++;
+                serviceTimeDTO.MeterServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic ReadSlips(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Reading Slips"))
+            {
+                serviceTimeDTO.ReadSlipsConvos++;
+                serviceTimeDTO.ReadSlipsServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic Reports(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Reports"))
+            {
+                serviceTimeDTO.ReportsConvos++;
+                serviceTimeDTO.ReportsServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic Scanner(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("Scanner"))
+            {
+                serviceTimeDTO.ScannerConvos++;
+                serviceTimeDTO.ScannerServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic USRU(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            if (tags.Contains("User Setup/Removal/Updates"))
+            {
+                serviceTimeDTO.USRUConvos++;
+                serviceTimeDTO.USRUServiceTime += i;
+            }
+            return serviceTimeDTO;
+        }
+        protected dynamic NoParents_PC(List<string> tags, int i, dynamic serviceTimeDTO)
+        {
+            List<string> parentTags = new List<string> { 
+            "Acquisition / Asset Transfer",
+            "Allocations",
+            "Batch",
+            "Chart Processing",
+            "Development Request",
+            "FTP",
+            "Gas Analysis",
+            "Label Request",
+            "Meter",
+            "Reading Slips",
+            "Reports",
+            "Scanner",
+            "User Setup/Removal/Updates"
+            };
+
+            if (parentTags.Any(x => tags.Any(y => y == x)))
+            {}
+            else
+            {
+                serviceTimeDTO.NoParentConvos++;
+                serviceTimeDTO.NoParentServiceTime += i;
+            }
+            return serviceTimeDTO;
         }
         protected dynamic Bill(List<string> tags, int i, dynamic serviceTimeDTO) {
             serviceTimeDTO.Convos++;
@@ -111,6 +259,25 @@ namespace ServiceTimeAPI.Controllers
             if (tags.Contains("ProChart"))
             {
                 serviceTimeDTO = tally.ProchartServiceTimeDTO;
+                // convos' sum of parent tags + noParent tags  would be more than total convos
+                // because some row would have more than 1 parent tags
+                // also some row dont have parent tag but only child tag, e.g no'Batch' but Batch General exist in Prochart, it's counted as nonparent
+                // some parent tag appear, and their children appear in other places too. e.g parent tag Chart Processing,children tag Chart Review appeared in various places
+                // above 2 facts cause nonparent count would be larger than actual and some parent tag would be less than actual
+                AAT(tags, i, serviceTimeDTO);
+                Allocations(tags, i, serviceTimeDTO);
+                Batch(tags, i, serviceTimeDTO);
+                ChartProcess(tags, i, serviceTimeDTO);
+                DevReq(tags, i, serviceTimeDTO);
+                FTP(tags, i, serviceTimeDTO);
+                GasAna(tags, i, serviceTimeDTO);
+                LabelRequest(tags, i, serviceTimeDTO);
+                Meter(tags, i, serviceTimeDTO);
+                ReadSlips(tags, i, serviceTimeDTO);
+                Reports(tags, i, serviceTimeDTO);
+                Scanner(tags, i, serviceTimeDTO);
+                USRU(tags, i, serviceTimeDTO);
+                NoParents_PC(tags, i, serviceTimeDTO);
                 Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("NetFlow"))
@@ -155,10 +322,10 @@ namespace ServiceTimeAPI.Controllers
         {
             Hashtable ht = ParseCSV(fileName);
             ServiceTimeTally tally = new ServiceTimeTally();
-            tally.ProchartServiceTimeDTO = new ProChartServiceTimeDTO { Convos = 0, ServiceTime = 0 };
-            tally.NetflowServiceTimeDTO = new NetFlowServiceTimeDTO { Convos = 0, ServiceTime = 0 };
-            tally.ProtrendServiceTimeDTO = new ProTrendServiceTimeDTO { Convos = 0, ServiceTime = 0 };
-            tally.PromonitorServiceTimeDTO = new ProMonitorServiceTimeDTO { Convos = 0, ServiceTime = 0 };
+            tally.ProchartServiceTimeDTO = new ProChartServiceTimeDTO {};
+            tally.NetflowServiceTimeDTO = new NetFlowServiceTimeDTO {};
+            tally.ProtrendServiceTimeDTO = new ProTrendServiceTimeDTO {};
+            tally.PromonitorServiceTimeDTO = new ProMonitorServiceTimeDTO {};
             foreach (string key in ht.Keys)
             {
                 List<string> tags = ht[key].ToString().Split(',').ToList();
@@ -198,6 +365,35 @@ namespace ServiceTimeAPI.Controllers
         public int UnknownBillableConvos { get; set; } = 0;
         public int UnknownBillableServiceTime { get; set; } = 0;
         //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
+
+        public int AATConvos { get; set; } = 0;
+        public int AATServiceTime { get; set; } = 0;
+        public int AllocationsConvos { get; set; } = 0;
+        public int AllocationsServiceTime { get; set; } = 0;
+        public int BatchConvos { get; set; } = 0;
+        public int BatchServiceTime { get; set; } = 0;
+        public int ChartProcessConvos { get; set; } = 0;
+        public int ChartProcessServiceTime { get; set; } = 0;
+        public int DevReqConvos { get; set; } = 0;
+        public int DevReqServiceTime { get; set; } = 0;
+        public int FTPConvos { get; set; } = 0;
+        public int FTPServiceTime { get; set; } = 0;
+        public int GasAnaConvos { get; set; } = 0;
+        public int GasAnaServiceTime { get; set; } = 0;
+        public int LabelRequestConvos { get; set; } = 0;
+        public int LabelRequestServiceTime { get; set; } = 0;
+        public int MeterConvos { get; set; } = 0;
+        public int MeterServiceTime { get; set; } = 0;
+        public int ReadSlipsConvos { get; set; } = 0;
+        public int ReadSlipsServiceTime { get; set; } = 0;
+        public int ReportsConvos { get; set; } = 0;
+        public int ReportsServiceTime { get; set; } = 0;
+        public int ScannerConvos { get; set; } = 0;
+        public int ScannerServiceTime { get; set; } = 0;
+        public int USRUConvos { get; set; } = 0;
+        public int USRUServiceTime { get; set; } = 0;
+        public int NoParentConvos { get; set; } = 0;
+        public int NoParentServiceTime { get; set; } = 0;
     }
     public class NetFlowServiceTimeDTO
     {
