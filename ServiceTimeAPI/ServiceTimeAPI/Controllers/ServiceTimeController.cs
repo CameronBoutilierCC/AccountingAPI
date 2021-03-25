@@ -9,6 +9,7 @@ using Microsoft.VisualBasic.FileIO;
 using System.Linq;
 using System.Collections.Generic;
 using ServiceTimeAPI.Models;
+using System.IO;
 
 namespace ServiceTimeAPI.Controllers
 {
@@ -59,30 +60,30 @@ namespace ServiceTimeAPI.Controllers
                 content = await res.Content.ReadAsStringAsync();
                 ExportResponse resObj = JsonSerializer.Deserialize<ExportResponse>(content);
 
-                //while (true)
-                //{
-                //    System.Threading.Thread.Sleep(200);
+                while (true)
+                {
+                    System.Threading.Thread.Sleep(200);
 
-                //    res = await httpClient.GetAsync($"exports/{resObj.id}");
-                //    res.EnsureSuccessStatusCode();
-                //    content = await res.Content.ReadAsStringAsync();
-                //    resObj = JsonSerializer.Deserialize<ExportResponse>(content);
-                //    if (resObj.url != null)
-                //        break;
-                //}
+                    res = await httpClient.GetAsync($"exports/{resObj.id}");
+                    res.EnsureSuccessStatusCode();
+                    content = await res.Content.ReadAsStringAsync();
+                    resObj = JsonSerializer.Deserialize<ExportResponse>(content);
+                    if (resObj.url != null)
+                        break;
+                }
 
-                //using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
-                //{
-                //    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\Users\tim.su.ES\Desktop\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
-                //    {
-                //        await contentStream.CopyToAsync(stream);
-                //    }
-                //}
+                using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
+                {
+                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\Users\tim.su.ES\Desktop\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
+                    {
+                        await contentStream.CopyToAsync(stream);
+                    }
+                }
                 tally = ProcessCSV(@"C:\Users\tim.su.ES\Desktop\Export.csv");
             }
             return Ok(tally);
         }
-        protected dynamic ParentTagsCount(Node root, List<string> tags, int i, dynamic serviceTimeDTO)
+        protected dynamic AllTagsCount(Node root, List<string> tags, int i, dynamic serviceTimeDTO)
         {
             if (root.Key == "ProChart") {
                 var res = tags.Where(tag => tag != "NetFlow").Where(t => root.Descendants().Any(node => (node.Key).Contains(t)));
@@ -647,7 +648,7 @@ namespace ServiceTimeAPI.Controllers
                         } },
                     }
                 };
-                ParentTagsCount(root, tags, i, serviceTimeDTO);
+                AllTagsCount(root, tags, i, serviceTimeDTO);
                 Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("NetFlow"))
@@ -675,7 +676,7 @@ namespace ServiceTimeAPI.Controllers
                         new Node{ Key = "Meters"},
                     }
                 };
-                ParentTagsCount(root, tags, i, serviceTimeDTO);
+                AllTagsCount(root, tags, i, serviceTimeDTO);
                 Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("ProTrend"))
@@ -700,7 +701,7 @@ namespace ServiceTimeAPI.Controllers
                         new Node{ Key = "User Setup/Removal/Updates"}
                     }
                 };
-                ParentTagsCount(root, tags, i, serviceTimeDTO);
+                AllTagsCount(root, tags, i, serviceTimeDTO);
                 Bill(tags, i, serviceTimeDTO);
             }
             else if (tags.Contains("ProMonitor"))
@@ -714,7 +715,7 @@ namespace ServiceTimeAPI.Controllers
                         new Node{ Key = "Data Import"}
                     }
                 };
-                ParentTagsCount(root, tags, i, serviceTimeDTO);
+                AllTagsCount(root, tags, i, serviceTimeDTO);
                 Bill(tags, i, serviceTimeDTO);
             }
             return tally;
