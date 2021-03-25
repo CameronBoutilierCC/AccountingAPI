@@ -85,13 +85,13 @@ namespace ServiceTimeAPI.Controllers
         protected dynamic ParentTagsCount(Node root, List<string> tags, int i, dynamic serviceTimeDTO)
         {
             if (root.Key == "ProChart") {
-                var res = root.Descendants().Where(node => node.Key != "ProChart").Where(node => tags.Any(tag => (node.Key).Contains(tag)));
+                var res = tags.Where(tag => tag != "NetFlow").Where(t => root.Descendants().Any(node => (node.Key).Contains(t)));
                 var count = res.Count();
                 if (count > 0)
                 {
-                    foreach (Node item in res)
+                    foreach (string item in res)
                     {
-                        switch (item.Key)
+                        switch (item)
                         {
                             case "User Setup/Removal":
                                 serviceTimeDTO.AATConvos++;
@@ -149,6 +149,195 @@ namespace ServiceTimeAPI.Controllers
                             case "Batch General":
                                 serviceTimeDTO.BatchGeneralConvos++;
                                 serviceTimeDTO.BatchGeneralServiceTime += i;
+                                break;
+                            case "Batch Delete":
+                                serviceTimeDTO.BatchDeleteConvos++;
+                                serviceTimeDTO.BatchDeleteServiceTime += i;
+                                break;
+                            case "Batch Error":
+                                serviceTimeDTO.BatchErrorConvos++;
+                                serviceTimeDTO.BatchErrorServiceTime += i;
+                                break;
+                            case "Batch Inquiry":
+                                serviceTimeDTO.BatchInquiryConvos++;
+                                serviceTimeDTO.BatchInquiryServiceTime += i;
+                                break;
+                            case "Batch Rush":
+                                serviceTimeDTO.BatchRushConvos++;
+                                serviceTimeDTO.BatchRushServiceTime += i;
+                                break;
+                            case "Batch Chart Re-scan":
+                                serviceTimeDTO.BatchReScanConvos++;
+                                serviceTimeDTO.BatchReScanServiceTime += i;
+                                break;
+                            case "Chart Pickup":
+                                serviceTimeDTO.ChartPickupConvos++;
+                                serviceTimeDTO.ChartPickupServiceTime += i;
+                                break;
+                            case "Chart Audits":
+                                serviceTimeDTO.ChartAuditsConvos++;
+                                serviceTimeDTO.ChartAuditsServiceTime += i;
+                                break;
+                            case "Chart Review":
+                                serviceTimeDTO.ChartReviewConvos++;
+                                serviceTimeDTO.ChartReviewServiceTime += i;
+                                break;
+                            case "Rush Processing / Reprocessing":
+                                serviceTimeDTO.RPRConvos++;
+                                serviceTimeDTO.RPRServiceTime += i;
+                                break;
+                            case "Gas Analysis Updates":
+                                serviceTimeDTO.GasAnaUpdatesConvos++;
+                                serviceTimeDTO.GasAnaUpdatesServiceTime += i;
+                                break;
+                            case "Meter Setup":
+                                serviceTimeDTO.MeterSetupConvos++;
+                                serviceTimeDTO.MeterSetupServiceTime += i;
+                                break;
+                            case "Meter moves":
+                                serviceTimeDTO.MeterMovesConvos++;
+                                serviceTimeDTO.MeterMovesServiceTime += i;
+                                break;
+                            case "Shut-in":
+                                serviceTimeDTO.ShutInConvos++;
+                                serviceTimeDTO.ShutInServiceTime += i;
+                                break;
+                            case "Reading sheet/manual entries":
+                                serviceTimeDTO.RSMEConvos++;
+                                serviceTimeDTO.RSMEServiceTime += i;
+                                break;
+                            case "Read sheets":
+                                serviceTimeDTO.ReadSheetConvos++;
+                                serviceTimeDTO.ReadSheetServiceTime += i;
+                                break;
+                            case "ProChart Report":
+                                serviceTimeDTO.ProChartReportConvos++;
+                                serviceTimeDTO.ProChartReportServiceTime += i;
+                                break;
+                            case "New scanner request":
+                                serviceTimeDTO.NewScanReqConvos++;
+                                serviceTimeDTO.NewScanReqServiceTime += i;
+                                break;
+                            case "Scanner Parts":
+                                serviceTimeDTO.ScannerPartsConvos++;
+                                serviceTimeDTO.ScannerPartsServiceTime += i;
+                                break;
+                            case "Shipping scanner":
+                                serviceTimeDTO.ShippingScannerConvos++;
+                                serviceTimeDTO.ShippingScannerServiceTime += i;
+                                break;
+                            case "Add Client to In-house Scanner":
+                                serviceTimeDTO.ACISConvos++;
+                                serviceTimeDTO.ACISServiceTime += i;
+                                break;
+                            case "Scanner Troubleshooting":
+                                serviceTimeDTO.STConvos++;
+                                serviceTimeDTO.STServiceTime += i;
+                                break;
+                            case "Application Access":
+                                serviceTimeDTO.AppAccessConvos++;
+                                serviceTimeDTO.AppAccessServiceTime += i;
+                                break;
+                            case "Client Deactivation":
+                                serviceTimeDTO.ClientDeactConvos++;
+                                serviceTimeDTO.ClientDeactServiceTime += i;
+                                break;
+                            case "Existing client":
+                                serviceTimeDTO.ExistclientConvos++;
+                                serviceTimeDTO.ExistclientServiceTime += i;
+                                break;
+                            case "New Client Activation":
+                                serviceTimeDTO.NewClientActConvos++;
+                                serviceTimeDTO.NewClientActServiceTime += i;
+                                break;
+                            case "Temporary Password Request":
+                                serviceTimeDTO.TempPwReqConvos++;
+                                serviceTimeDTO.TempPwReqServiceTime += i;
+                                break;
+                            // starting grandchild tags
+                            case "Chart Summary Report":
+                                serviceTimeDTO.CSRConvos++;
+                                serviceTimeDTO.CSRServiceTime += i;
+                                break;
+                            case "Chart Summary Report To Excel":
+                                serviceTimeDTO.CSREConvos++;
+                                serviceTimeDTO.CSREServiceTime += i;
+                                break;
+                            case "Chart Summary Report with Test Summary":
+                                serviceTimeDTO.CSRTSConvos++;
+                                serviceTimeDTO.CSRTSServiceTime += i;
+                                break;
+                            case "Custom Reports":
+                                serviceTimeDTO.CustomReportsConvos++;
+                                serviceTimeDTO.CustomReportsServiceTime += i;
+                                break;
+                            case "Chart Evaluation":
+                                serviceTimeDTO.ChartEvalConvos++;
+                                serviceTimeDTO.ChartEvalServiceTime += i;
+                                break;
+                            case "Chart Status":
+                                serviceTimeDTO.ChartStatusConvos++;
+                                serviceTimeDTO.ChartStatusServiceTime += i;
+                                break;
+                            case "Delivery Files":
+                                serviceTimeDTO.DeliveryFilesConvos++;
+                                serviceTimeDTO.DeliveryFilesServiceTime += i;
+                                break;
+                            case "EDI":
+                                serviceTimeDTO.EDIConvos++;
+                                serviceTimeDTO.EDIServiceTime += i;
+                                break;
+                            case "Estimates":
+                                serviceTimeDTO.EstimatesConvos++;
+                                serviceTimeDTO.EstimatesServiceTime += i;
+                                break;
+                            case "Gasmet measured":
+                                serviceTimeDTO.GasmetMeasuredConvos++;
+                                serviceTimeDTO.GasmetMeasuredServiceTime += i;
+                                break;
+                            case "Gasmet tested":
+                                serviceTimeDTO.GasmetTestedConvos++;
+                                serviceTimeDTO.GasmetTestedServiceTime += i;
+                                break;
+                            case "Meter Data Extract":
+                                serviceTimeDTO.MDEConvos++;
+                                serviceTimeDTO.MDEServiceTime += i;
+                                break;
+                            case "Meter Equipment Change Report":
+                                serviceTimeDTO.MECRConvos++;
+                                serviceTimeDTO.MECRServiceTime += i;
+                                break;
+                            case "Prism Measured":
+                                serviceTimeDTO.PrismMeasuredConvos++;
+                                serviceTimeDTO.PrismMeasuredServiceTime += i;
+                                break;
+                            case "Production Summary":
+                                serviceTimeDTO.ProductionSummaryConvos++;
+                                serviceTimeDTO.ProductionSummaryServiceTime += i;
+                                break;
+                            case "Receipt Files":
+                                serviceTimeDTO.ReceiptFilesConvos++;
+                                serviceTimeDTO.ReceiptFilesServiceTime += i;
+                                break;
+                            case "Updates":
+                                serviceTimeDTO.UpdatesConvos++;
+                                serviceTimeDTO.UpdatesServiceTime += i;
+                                break;
+                            case "Variance":
+                                serviceTimeDTO.VarianceConvos++;
+                                serviceTimeDTO.VarianceServiceTime += i;
+                                break;
+                            case "Volume Detailed Reports":
+                                serviceTimeDTO.VDRConvos++;
+                                serviceTimeDTO.VDRServiceTime += i;
+                                break;
+                            case "Volume Summary":
+                                serviceTimeDTO.VolumeSummaryConvos++;
+                                serviceTimeDTO.VolumeSummaryServiceTime += i;
+                                break;
+                            case "Weekly Cart Report":
+                                serviceTimeDTO.WCRConvos++;
+                                serviceTimeDTO.WCRServiceTime += i;
                                 break;
                             default:
                                 break;
@@ -250,13 +439,13 @@ namespace ServiceTimeAPI.Controllers
             }
             else if (root.Key == "ProTrend")
             {
-                var res = root.Descendants().Where(node => node.Key != "ProTrend").Where(node => tags.Any(tag => (node.Key).Contains(tag)));
+                var res = tags.Where(tag => tag != "ProTrend").Where(t => root.Descendants().Any(node => (node.Key).Contains(t)));
                 var count = res.Count();
                 if (count > 0)
                 {
-                    foreach (Node item in res)
+                    foreach (string item in res)
                     {
-                        switch (item.Key)
+                        switch (item)
                         {
                             case "Existing Asset Update":
                                 serviceTimeDTO.EAUConvos++;
@@ -323,13 +512,13 @@ namespace ServiceTimeAPI.Controllers
             }
             else if (root.Key == "ProMonitor")
             {
-                var res = root.Descendants().Where(node => node.Key != "ProMonitor").Where(node => tags.Any(tag => (node.Key).Contains(tag)));
+                var res = tags.Where(tag => tag != "ProMonitor").Where(t => root.Descendants().Any(node => (node.Key).Contains(t)));
                 var count = res.Count();
                 if (count > 0)
                 {
-                    foreach (Node item in res)
+                    foreach (string item in res)
                     {
-                        switch (item.Key)
+                        switch (item)
                         {
                             case "Data Import":
                                 serviceTimeDTO.DataImpConvos++;
@@ -387,20 +576,75 @@ namespace ServiceTimeAPI.Controllers
                         new Node{ Key = "Acquisition / Asset Transfer"},
                         new Node{ Key = "Allocations"},
                         new Node{ Key = "Batch",Children = new List<Node>{
-                                    new Node{  Key = "Batch General" }
+                                    new Node{  Key = "Batch General" },
+                                    new Node{  Key = "Batch Delete" },
+                                    new Node{  Key = "Batch Error" },
+                                    new Node{  Key = "Batch Inquiry" },
+                                    new Node{  Key = "Batch Rush" },
+                                    new Node{  Key = "Batch Chart Re-scan" },
+                                    new Node{  Key = "Chart Pickup" }
                              }
                          },
-                        new Node{ Key = "Chart Processing"},
+                        new Node{ Key = "Chart Processing",Children = new List<Node>{
+                                    new Node{  Key = "Chart Audits" },
+                                    new Node{  Key = "Chart Review" },
+                                    new Node{  Key = "Rush Processing / Reprocessing" }
+                             }},
                         new Node{ Key = "Development Request"},
                         new Node{ Key = "Chart Processing"},
                         new Node{ Key = "FTP"},
-                        new Node{ Key = "Gas Analysis"},
+                        new Node{ Key = "Gas Analysis",Children = new List<Node>{
+                                    new Node{  Key = "Gas Analysis Updates" }
+                        } },
                         new Node{ Key = "Label Request"},
-                        new Node{ Key = "Meter"},
-                        new Node{ Key = "Reading Slips"},
-                        new Node{ Key = "Reports"},
-                        new Node{ Key = "Scanner"},
-                        new Node{ Key = "User Setup/Removal/Updates"},
+                        new Node{ Key = "Meter",Children = new List<Node>{
+                                    new Node{  Key = "Meter Setup" },
+                                     new Node{  Key = "Meter moves" },
+                                      new Node{  Key = "Shut-in" }
+                        } },
+                        new Node{ Key = "Reading Slips",Children = new List<Node>{
+                                    new Node{  Key = "Reading sheet/manual entries" },
+                                     new Node{  Key = "Read sheets" }
+                        } },
+                        new Node{ Key = "Reports",Children = new List<Node>{
+                                    new Node{  Key = "ProChart Report",Children = new List<Node>{
+                                        new Node{  Key = "Chart Summary Report" },
+                                        new Node{  Key = "Chart Summary Report To Excel" },
+                                        new Node{  Key = "Chart Summary Report with Test Summary" },
+                                        new Node{  Key = "Custom Reports" },
+                                        new Node{  Key = "Chart Evaluation" },
+                                        new Node{  Key = "Chart Status" },
+                                        new Node{  Key = "Delivery Files" },
+                                        new Node{  Key = "EDI" },
+                                        new Node{  Key = "Estimates" },
+                                        new Node{  Key = "Gasmet measured" },
+                                        new Node{  Key = "Gasmet tested" },
+                                        new Node{  Key = "Meter Data Extract" },
+                                        new Node{  Key = "Meter Equipment Change Report" },
+                                        new Node{  Key = "Prism Measured" },
+                                        new Node{  Key = "Production Summary" },
+                                        new Node{  Key = "Receipt Files" },
+                                        new Node{  Key = "Updates" },
+                                        new Node{  Key = "Variance" },
+                                        new Node{  Key = "Volume Detailed Reports" },
+                                        new Node{  Key = "Volume Summary" },
+                                        new Node{  Key = "Weekly Cart Report" }
+                                    } },
+                        } },
+                        new Node{ Key = "Scanner",Children = new List<Node>{
+                                    new Node{  Key = "New scanner request" },
+                                    new Node{  Key = "Scanner Parts" },
+                                    new Node{  Key = "Shipping scanner" },
+                                    new Node{  Key = "Add Client to In-house Scanner" },
+                                    new Node{  Key = "Scanner Troubleshooting" }
+                        } },
+                        new Node{ Key = "User Setup/Removal/Updates",Children = new List<Node>{
+                                    new Node{  Key = "Application Access" },
+                                    new Node{  Key = "Client Deactivation" },
+                                    new Node{  Key = "Existing client" },
+                                    new Node{  Key = "New Client Activation" },
+                                    new Node{  Key = "Temporary Password Request" }
+                        } },
                     }
                 };
                 ParentTagsCount(root, tags, i, serviceTimeDTO);
