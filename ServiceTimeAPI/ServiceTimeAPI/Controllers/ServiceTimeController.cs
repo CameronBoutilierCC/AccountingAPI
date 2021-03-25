@@ -145,6 +145,11 @@ namespace ServiceTimeAPI.Controllers
                                 serviceTimeDTO.USRUConvos++;
                                 serviceTimeDTO.USRUServiceTime += i;
                                 break;
+                            //starting child tags
+                            case "Batch General":
+                                serviceTimeDTO.BatchGeneralConvos++;
+                                serviceTimeDTO.BatchGeneralServiceTime += i;
+                                break;
                             default:
                                 break;
                         }
@@ -381,7 +386,10 @@ namespace ServiceTimeAPI.Controllers
                     Children = new List<Node>{
                         new Node{ Key = "Acquisition / Asset Transfer"},
                         new Node{ Key = "Allocations"},
-                        new Node{ Key = "Batch"},
+                        new Node{ Key = "Batch",Children = new List<Node>{
+                                    new Node{  Key = "Batch General" }
+                             }
+                         },
                         new Node{ Key = "Chart Processing"},
                         new Node{ Key = "Development Request"},
                         new Node{ Key = "Chart Processing"},

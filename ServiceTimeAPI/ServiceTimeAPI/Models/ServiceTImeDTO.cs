@@ -48,6 +48,9 @@ namespace ServiceTimeAPI.Models
         public int ScannerServiceTime { get; set; } = 0;
         public int USRUConvos { get; set; } = 0;
         public int USRUServiceTime { get; set; } = 0;
+        // starting Child tag
+        public int BatchGeneralConvos { get; set; } = 0;
+        public int BatchGeneralServiceTime { get; set; } = 0;
         public int NoParentConvos { get; set; } = 0;
         public int NoParentServiceTime { get; set; } = 0;
     }
