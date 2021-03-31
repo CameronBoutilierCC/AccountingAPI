@@ -18,7 +18,8 @@ namespace ServiceTimeAPI.Controllers
     public class ServiceTimeController : ControllerBase
     {
         protected IHttpClientFactory HttpClientFactory { get; }
-
+        private string csvFilePath = @"C:\FileDownload\Export.csv";
+        private string companyFilePath = @"C:\FileDownload\Customers.csv";
         public ServiceTimeController(IHttpClientFactory httpClientFactory)
         {
             HttpClientFactory = httpClientFactory;
@@ -27,7 +28,15 @@ namespace ServiceTimeAPI.Controllers
         [HttpGet("GetServiceTimes")]
         public async Task<IActionResult> GetServiceTimes(int month, int year)
         {
-            ServiceTimeTally tally = new ServiceTimeTally();
+            //await GetExportCSV(month, year);
+            await Task.Delay(10);
+            return Ok(ProcessCSV(csvFilePath));
+        }
+
+
+
+        private async Task GetExportCSV(int month, int year)
+        {
             DateTime startTime = new DateTime(year, month, 1);
             startTime = DateTime.SpecifyKind(startTime, DateTimeKind.Utc);
 
@@ -62,7 +71,7 @@ namespace ServiceTimeAPI.Controllers
 
                 while (true)
                 {
-                    System.Threading.Thread.Sleep(10000);
+                    System.Threading.Thread.Sleep(5000);
 
                     res = await httpClient.GetAsync($"exports/{resObj.id}");
                     res.EnsureSuccessStatusCode();
@@ -74,14 +83,12 @@ namespace ServiceTimeAPI.Controllers
 
                 using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, resObj.url))
                 {
-                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(@"C:\FileDownload\Export.csv", FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
+                    using (Stream contentStream = await (await httpClient.SendAsync(request)).Content.ReadAsStreamAsync(), stream = new FileStream(csvFilePath, FileMode.Create, FileAccess.Write, FileShare.None, 10000, true))
                     {
                         await contentStream.CopyToAsync(stream);
                     }
                 }
-                tally = ProcessCSV(@"C:\FileDownload\Export.csv");
             }
-            return Ok(tally);
         }
 
         private Hashtable ParseCSV(string filename)
@@ -105,74 +112,122 @@ namespace ServiceTimeAPI.Controllers
             return res;
         }
 
-        private ServiceTimeTally ProcessCSV(string fileName)
+        private Dictionary<string, string> ParseCompanyList()
         {
-            ServiceTimeTally tally = new ServiceTimeTally();
+            Dictionary<string, string> companies = new Dictionary<string, string>();
+            using (TextFieldParser parser = new TextFieldParser(companyFilePath))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                string[] fields = parser.ReadFields();
+                while (!parser.EndOfData)
+                {
+                    fields = parser.ReadFields();
+                    if (!companies.ContainsKey(fields[0]))
+                        companies.Add(fields[0], fields[1]);
+                }
+            }
+            return companies;
+        }
+
+        private Dictionary<string, ProductServiceTime> ProcessCSV(string fileName)
+        {
+            string[] productNames = { "ProChart", "NetFlow", "ProTrend", "ProMonitor" };
+            Dictionary<string, ProductServiceTime> productServiceTimes = new Dictionary<string, ProductServiceTime>();
             Hashtable ht = ParseCSV(fileName);
+            Dictionary<string, string> companyList = ParseCompanyList();
+
 
             foreach (string key in ht.Keys)
             {
+                ProductServiceTime currentProduct;
+                CompanyServiceTime currentCompany;
                 List<string> tags = ht[key].ToString().Split(',').ToList();
                 int i = 0;
 
+                //Get minutes for conversation
                 foreach (string tag in tags)
                     if (tag.Contains("Minutes"))
                         i = int.Parse(tag.Split(" ")[0]);
 
-                if (tags.Contains("ProChart"))
+                //Figure out what product it is
+                foreach (string product in productNames)
                 {
-                    tally.ProChartConvos++;
-                    tally.ProChartServiceTime += i;
-                }
-                else if (tags.Contains("NetFlow"))
-                {
-                    tally.NetFlowConvos++;
-                    tally.NetFlowServiceTime += i;
-                }
-                else if (tags.Contains("ProTrend"))
-                {
-                    tally.ProTrendConvos++;
-                    tally.ProTrendServiceTime += i;
-                }
-                else if (tags.Contains("ProMonitor"))
-                {
-                    tally.ProMonitorConvos++;
-                    tally.ProMonitorServiceTime += i;
+                    if (tags.Contains(product))
+                    {
+                        //Add the product if its not in the dictionary
+                        if (!productServiceTimes.ContainsKey(product))
+                        {
+                            productServiceTimes.Add(product, new ProductServiceTime());
+                        }
+                        //Add tickets and time to product
+                        currentProduct = productServiceTimes[product];
+                        currentProduct.TotalTickets++;
+                        currentProduct.TotalServiceTime += i;
+
+                        //Get the company for the ticket
+                        currentCompany = null;
+                        foreach (string tag in tags)
+                        {
+                            if (companyList.ContainsKey(tag))
+                            {
+                                //If company not in product yet create new company service time and add it. 
+                                if (!currentProduct.companyServiceTimes.ContainsKey(tag))
+                                    currentProduct.companyServiceTimes.Add(tag, new CompanyServiceTime()
+                                    {
+                                        Name = companyList[tag],
+                                        Code = tag
+                                    });
+                                currentCompany = currentProduct.companyServiceTimes[tag];
+                                break;
+                            }
+                        }
+                        //If no company set company to unknown
+                        if (currentCompany == null)
+                        {
+                            if (!currentProduct.companyServiceTimes.ContainsKey("Unknown"))
+                                currentProduct.companyServiceTimes.Add("Unknown", new CompanyServiceTime()
+                                {
+                                    Name = "Unknown",
+                                    Code = "0"
+                                });
+                            currentCompany = currentProduct.companyServiceTimes["Unknown"];
+                        }
+
+                        if (tags.Contains("Billable"))
+                            currentCompany.BillableServiceTime += i;
+                        else if (tags.Contains("Non-Billable"))
+                            currentCompany.NonBillableServiceTime += i;
+                        else
+                            currentCompany.UnknownBillableServiceTime += i;
+                    }
                 }
             }
-
-            return tally;
+            return productServiceTimes;
         }
-
     }
 
-    public class ServiceTimeTally
+
+    public class ProductServiceTime
     {
-        public ProChartServiceTimeDTO ProchatServiceTime { get; set; }
-        public int NetFlowConvos { get; set; }
-        public int NetFlowServiceTime { get; set; }
-        public int ProTrendConvos { get; set; }
-        public int ProTrendServiceTime { get; set; }
-        public int ProMonitorConvos { get; set; }
-        public int ProMonitorServiceTime { get; set; }
+        public ProductServiceTime()
+        {
+            TotalTickets = 0;
+            TotalServiceTime = 0;
+            companyServiceTimes = new Dictionary<string, CompanyServiceTime>();
+        }
+        public int TotalTickets { get; set; }
+        public int TotalServiceTime { get; set; }
+        public Dictionary<string, CompanyServiceTime> companyServiceTimes { get; set; }
     }
 
-    public class ProChartServiceTimeDTO
+    public class CompanyServiceTime
     {
-        public int ProChartConvos { get; set; }
-        public int ProChartServiceTime { get; set; }
-
-        public int BillableConvos { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
         public int BillableServiceTime { get; set; }
-        //public Dictionary<string, int> BillableTagServiceTime { get; set; }
-
-        public int NonBillableConvos { get; set; }
         public int NonBillableServiceTime { get; set; }
-        //public Dictionary<string, int> NonBillableTagServiceTime { get; set; }
-
-        public int UnknownBillableConvos { get; set; }
         public int UnknownBillableServiceTime { get; set; }
-        //public Dictionary<string, int> UnknownBillableTagServiceTime { get; set; }
     }
 
 
